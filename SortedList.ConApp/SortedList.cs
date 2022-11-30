@@ -12,7 +12,7 @@
                 Next = next;
             }
         }
-
+        private Element? first = null;
         /// <summary>
         /// Calculates the number of elements in the list.
         /// </summary>
@@ -20,7 +20,15 @@
         {
             get
             {
-                throw new NotImplementedException();
+                int result = 0;
+                Element? run = first;
+
+                while (run != null)
+                {
+                    result++;
+                    run = run.Next;
+                }
+                return result;
             }
         }
 
@@ -31,7 +39,24 @@
         /// <exception cref="NotImplementedException"></exception>
         public void Insert(int value)
         {
-            throw new NotImplementedException();
+            if (first == null)  // Case A: the list is empty
+            {
+                first = new Element(value, first);
+            }
+            else if (value < first.Data) // Case B: Insert the element before the first element.
+            {
+                first = new Element(value, first);
+            }
+            else // Case C and Case D : Insert the item in the list (Case C) or at the end (Case D).
+            {
+                Element? run = first;
+
+                while (run != null && run.Next != null && run.Next.Data < value)
+                {
+                    run = run.Next;
+                }
+                run!.Next = new Element(value, run.Next);
+            }
         }
         /// <summary>
         /// Removes the position [0..Count-1], otherwise an IndexOutOfRange is thrown.
@@ -40,7 +65,25 @@
         /// <exception cref="NotImplementedException"></exception>
         public void Remove(int position)
         {
-            throw new NotImplementedException();
+            if (position < 0 || position >= Count)
+                throw new IndexOutOfRangeException();
+
+            if (position == 0)
+            {
+                first = first!.Next;
+            }
+            else
+            {
+                int idx = 0;
+                Element? run = first;
+
+                while (run != null && idx != position - 1)
+                {
+                    idx++;
+                    run = run.Next;
+                }
+                run!.Next = run!.Next!.Next;
+            }
         }
         /// <summary>
         /// Returns the value at the lite position to the caller.
@@ -50,7 +93,18 @@
         /// <exception cref="NotImplementedException"></exception>
         public int GetAt(int position)
         {
-            throw new NotImplementedException();
+            if (position < 0 || position >= Count)
+                throw new IndexOutOfRangeException();
+
+            int idx = 0;
+            Element? run = first;
+
+            while (run != null && idx != position)
+            {
+                idx++;
+                run = run.Next;
+            }
+            return run!.Data;
         }
     }
 }
